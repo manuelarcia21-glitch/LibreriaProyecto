@@ -4,13 +4,13 @@
  */
 package vista;
 import javax.swing.JOptionPane;
+import java.util.HashMap;
 /**
  *
  * @author manue
  */
 public class LoginView extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginView.class.getName());
+    private static final java.util.HashMap<String, String> usuariosRegistrados = new java.util.HashMap<>();
 
     /**
      * Creates new form LoginView
@@ -19,7 +19,10 @@ public LoginView() {
         initComponents();
         this.setLocationRelativeTo(null); 
         this.setTitle("Login - Librería en Línea");
+        
+        usuariosRegistrados.put("admin", "1234");
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,6 +37,7 @@ public LoginView() {
         jLabel2 = new javax.swing.JLabel();
         btnIngresar = new javax.swing.JButton();
         txtContrasena = new javax.swing.JPasswordField();
+        btnRegistrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,18 +52,23 @@ public LoginView() {
 
         txtContrasena.addActionListener(this::txtContrasenaActionPerformed);
 
+        btnRegistrar.setText("Registrarse");
+        btnRegistrar.addActionListener(this::btnRegistrarActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnIngresar)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtContrasena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnRegistrar)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnIngresar)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtContrasena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)))
                 .addContainerGap(580, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -75,7 +84,9 @@ public LoginView() {
                 .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(btnIngresar)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addComponent(btnRegistrar)
+                .addContainerGap(151, Short.MAX_VALUE))
         );
 
         pack();
@@ -86,23 +97,20 @@ public LoginView() {
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        String usuario = txtUsuario.getText().trim();
+String usuario = txtUsuario.getText().trim();
         String password = new String(txtContrasena.getPassword()).trim();
 
- 
         if (usuario.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, llene todos los campos.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        if (usuario.equals("admin") && password.equals("1234")) {
+        // Validación contra el HashMap de usuarios registrados
+        if (usuariosRegistrados.containsKey(usuario) && usuariosRegistrados.get(usuario).equals(password)) {
             JOptionPane.showMessageDialog(this, "¡Bienvenido al sistema, " + usuario + "!", "Acceso Exitoso", JOptionPane.INFORMATION_MESSAGE);
             
-
             CatalogoView catalogo = new CatalogoView();
             catalogo.setVisible(true);
-            
-
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
@@ -112,6 +120,30 @@ public LoginView() {
     private void txtContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtContrasenaActionPerformed
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+String nuevoUsuario = JOptionPane.showInputDialog(this, "Ingrese el nombre de usuario nuevo:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
+        
+        if (nuevoUsuario == null || nuevoUsuario.trim().isEmpty()) {
+            return;
+        }
+        
+        nuevoUsuario = nuevoUsuario.trim();
+        
+        if (usuariosRegistrados.containsKey(nuevoUsuario)) {
+            JOptionPane.showMessageDialog(this, "El usuario ya existe. Intente con otro nombre.", "Usuario Duplicado", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String nuevaContrasena = JOptionPane.showInputDialog(this, "Ingrese la contraseña para " + nuevoUsuario + ":", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
+        
+        if (nuevaContrasena == null || nuevaContrasena.trim().isEmpty()) {
+            return;
+        }
+        
+        usuariosRegistrados.put(nuevoUsuario, nuevaContrasena.trim());
+        JOptionPane.showMessageDialog(this, "¡Cuenta creada con éxito! Ya puede iniciar sesión.", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -135,8 +167,10 @@ public static void main(String args[]) {
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;
+    private javax.swing.JButton btnRegistrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPasswordField txtContrasena;
