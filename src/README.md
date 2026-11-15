@@ -4,7 +4,7 @@
 Aplicación de escritorio desarrollada en Java utilizando JFrame (Swing) para la gestión de una librería virtual. Este avance incluye el módulo funcional de inicio de sesión (**Login**), el **sistema de registro de nuevos usuarios** y la estructura inicial del **Catálogo**.
 
 ## Integrantes
-- Manuel Esteban Arcia Pastrama *(agrega aquí los nombres de tus compañeros si aplica)*
+- Manuel Esteban Arcia Pastrama 
 
 ## Módulos Implementados
 - [x] **Módulo de Login:** Ventana de autenticación con validación de credenciales (incluye usuario administrador por defecto y cuentas personalizadas).
