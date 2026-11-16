@@ -11,7 +11,7 @@ Aplicación de escritorio desarrollada en Java utilizando JFrame (Swing) para la
 - [x] **Módulo de Registro:** Funcionalidad interactiva para que nuevos usuarios creen su propia cuenta y accedan al sistema.
 - [x] **Ventana de Catálogo:** Interfaz base para la visualización de inventario.
 - [x] **Control de Versiones:** Repositorio en GitHub con historial de commits estructurados.
-
+- [x] **Módulo de Compras / Ventas:** Simulación de carrito y transacciones con validación de stock en tiempo real, cálculo de totales y generación de tickets de compra.
 ## Instrucciones de Ejecución
 1. Clonar o descargar el repositorio.
 2. Abrir el proyecto en **NetBeans IDE**.

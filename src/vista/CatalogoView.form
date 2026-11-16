@@ -43,7 +43,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jScrollPane1" alignment="0" pref="894" max="32767" attributes="0"/>
               <Group type="102" attributes="0">
-                  <EmptySpace pref="544" max="32767" attributes="0"/>
+                  <EmptySpace pref="397" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel2" min="-2" pref="71" max="-2" attributes="0"/>
@@ -52,6 +52,8 @@
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
+                          <Component id="btnComprar" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
                           <Component id="btnVerDetalle" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
                           <Component id="btnCerrarSesion" min="-2" max="-2" attributes="0"/>
@@ -81,6 +83,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnVerDetalle" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnCerrarSesion" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnComprar" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -136,6 +139,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Buscador:"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnComprar">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Comprar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnComprarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
