@@ -18,7 +18,9 @@ public class CatalogoView extends javax.swing.JFrame {
         cargarLibrosIniciales();
         actualizarTabla("");
     }
+    
 private void configurarTabla() {
+    
         modeloTabla = new DefaultTableModel(
             new Object[]{"ISBN", "Título", "Autor", "Categoría", "Precio ($)", "Stock"}, 0
         ) {
@@ -31,11 +33,11 @@ private void configurarTabla() {
     }
 
     private void cargarLibrosIniciales() {
-        listaLibros.add(new Libro("978-0134685991", "Effective Java", "Joshua Bloch", "Programación", 45.00, 12));
-        listaLibros.add(new Libro("978-0132350884", "Clean Code", "Robert C. Martin", "Ingeniería de Software", 38.50, 8));
-        listaLibros.add(new Libro("978-8497592208", "Cien años de soledad", "Gabriel García Márquez", "Literatura", 22.00, 15));
-        listaLibros.add(new Libro("978-0201633610", "Design Patterns", "Erich Gamma et al.", "Arquitectura", 50.00, 5));
-        listaLibros.add(new Libro("978-8445000663", "El Señor de los Anillos", "J.R.R. Tolkien", "Fantasía", 29.90, 10));
+        listaLibros.add(new Libro("978-0134685991", "Effective Java", "Joshua Bloch", "Programación", 45.00, 12, "img/effective_java.jpg"));
+        listaLibros.add(new Libro("978-0132350884", "Clean Code", "Robert C. Martin", "Ingeniería de Software", 38.50, 8,"img/clean_code.jpg" ));
+        listaLibros.add(new Libro("978-8497592208", "Cien años de soledad", "Gabriel García Márquez", "Literatura", 22.00, 15, "img/cien_anos_de_soledad.jpg"));
+        listaLibros.add(new Libro("978-0201633610", "Design Patterns", "Erich Gamma et al.", "Arquitectura", 50.00, 5, "img/design_patern.jpg"));
+        listaLibros.add(new Libro("978-8445000663", "El Señor de los Anillos: La comunidad del anillo", "J.R.R. Tolkien", "Fantasía", 29.90, 10, "img/señor_de_los_anillos.jpg"));
     }
 
     private void actualizarTabla(String filtro) {
@@ -186,27 +188,43 @@ actualizarTabla(txtBuscar.getText());        // TODO add your handling code here
 
     private void btnVerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetalleActionPerformed
 int filaSeleccionada = tblLibros.getSelectedRow();
-    
     if (filaSeleccionada == -1) {
         JOptionPane.showMessageDialog(this, "Seleccione un libro de la tabla primero.", "Sin selección", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
     String isbn = tblLibros.getValueAt(filaSeleccionada, 0).toString();
-    String titulo = tblLibros.getValueAt(filaSeleccionada, 1).toString();
-    String autor = tblLibros.getValueAt(filaSeleccionada, 2).toString();
-    String categoria = tblLibros.getValueAt(filaSeleccionada, 3).toString();
-    String precio = tblLibros.getValueAt(filaSeleccionada, 4).toString();
-    String stock = tblLibros.getValueAt(filaSeleccionada, 5).toString();
+    Libro libroSeleccionado = null;
+    for (Libro l : listaLibros) {
+        if (l.getIsbn().equals(isbn)) {
+            libroSeleccionado = l;
+            break;
+        }
+    }
 
-    String info = "ISBN: " + isbn + "\n"
-                + "Título: " + titulo + "\n"
-                + "Autor: " + autor + "\n"
-                + "Categoría: " + categoria + "\n"
-                + "Precio: $" + precio + "\n"
-                + "Unidades disponibles: " + stock;
+    if (libroSeleccionado == null) return;
 
-    JOptionPane.showMessageDialog(this, info, "Ficha del Libro", JOptionPane.INFORMATION_MESSAGE);
+
+    javax.swing.ImageIcon iconoPortada = null;
+    try {
+        // Carga la imagen desde la ruta especificada
+        java.awt.Image img = new javax.swing.ImageIcon(libroSeleccionado.getRutaImagen()).getImage();
+
+        java.awt.Image imgEscalada = img.getScaledInstance(100, 150, java.awt.Image.SCALE_SMOOTH);
+        iconoPortada = new javax.swing.ImageIcon(imgEscalada);
+    } catch (Exception e) {
+ 
+    }
+
+    String info = "ISBN: " + libroSeleccionado.getIsbn() + "\n"
+                + "Título: " + libroSeleccionado.getTitulo() + "\n"
+                + "Autor: " + libroSeleccionado.getAutor() + "\n"
+                + "Categoría: " + libroSeleccionado.getCategoria() + "\n"
+                + "Precio: $" + String.format("%.2f", libroSeleccionado.getPrecio()) + "\n"
+                + "Stock disponible: " + libroSeleccionado.getStock();
+
+
+    JOptionPane.showMessageDialog(this, info, "Ficha y Portada del Libro", JOptionPane.INFORMATION_MESSAGE, iconoPortada);
     }//GEN-LAST:event_btnVerDetalleActionPerformed
 
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
@@ -312,14 +330,40 @@ int filaSeleccionada = tblLibros.getSelectedRow();
         return;
     }
 
-    // Agregar una copia o el libro al carrito y descontar stock temporalmente
-    carrito.add(libroSeleccionado);
-    libroSeleccionado.setStock(libroSeleccionado.getStock() - 1);
-    
-    // Actualizar la tabla visualmente
-    actualizarTabla(txtBuscar.getText());
 
-    JOptionPane.showMessageDialog(this, "¡Libro agregado al carrito con éxito!\n" + libroSeleccionado.getTitulo(), "Carrito de Compras", JOptionPane.INFORMATION_MESSAGE);
+String cantidadStr = JOptionPane.showInputDialog(this, 
+        "Libro: " + libroSeleccionado.getTitulo() + "\n" +
+        "Stock disponible: " + libroSeleccionado.getStock() + "\n\n" +
+        "Ingrese la cantidad que desea agregar al carrito:", 
+        "Cantidad a comprar", JOptionPane.QUESTION_MESSAGE);
+    
+
+if (cantidadStr == null) return; // Si cancela
+
+    try {
+        int cantidad = Integer.parseInt(cantidadStr.trim());
+
+        if (cantidad <= 0) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (cantidad > libroSeleccionado.getStock()) {
+            JOptionPane.showMessageDialog(this, "No hay suficiente stock disponible. Stock actual: " + libroSeleccionado.getStock(), "Stock insuficiente", JOptionPane.ERROR_MESSAGE);
+            return;
+        } 
+        for (int i = 0; i < cantidad; i++) {
+            carrito.add(libroSeleccionado);
+        }
+        
+        libroSeleccionado.setStock(libroSeleccionado.getStock() - cantidad);
+        actualizarTabla(txtBuscar.getText());
+
+        JOptionPane.showMessageDialog(this, "¡Se agregaron " + cantidad + " unidad(es) al carrito!", "Carrito Actualizado", JOptionPane.INFORMATION_MESSAGE);
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingrese un número entero válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnAgregarCarritoActionPerformed
 
     private void btnVerCarritoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCarritoActionPerformed
@@ -327,7 +371,9 @@ if (carrito.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Tu carrito de compras está vacío.", "Carrito Vacío", JOptionPane.WARNING_MESSAGE);
         return;
     }
-
+    
+    String[] opciones = {"Pagar / Checkout", "Quitar un libro", "Cerrar"};
+    
     double totalGeneral = 0.0;
     StringBuilder detalleCarrito = new StringBuilder("=============== TU CARRITO DE COMPRAS ===============\n");
 
@@ -339,14 +385,42 @@ if (carrito.isEmpty()) {
 
     detalleCarrito.append("--------------------------------------------------------------------\n");
     detalleCarrito.append("TOTAL A PAGAR: $" + String.format("%.2f", totalGeneral) + "\n");
-    detalleCarrito.append("====================================================\n\n");
-    detalleCarrito.append("¿Deseas procesar el pago y finalizar la compra?");
+    detalleCarrito.append("====================================================\n");
 
-    int opcion = JOptionPane.showConfirmDialog(this, detalleCarrito.toString(), "Checkout - Carrito", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    int seleccionAccion = JOptionPane.showOptionDialog(this,
+            detalleCarrito.toString() + "\n¿Qué deseas hacer?",
+            "Gestión del Carrito",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            opciones,
+            opciones[0]);
 
-    if (opcion == JOptionPane.YES_OPTION) {
-        JOptionPane.showMessageDialog(this, "¡Compra procesada con éxito!\nGracias por tu compra en la librería virtual.", "Pago Exitoso", JOptionPane.INFORMATION_MESSAGE);
-        carrito.clear(); 
+    if (seleccionAccion == 0) {
+
+        JOptionPane.showMessageDialog(this, "¡Compra procesada con éxito!\nTotal cancelado: $" + String.format("%.2f", totalGeneral) + "\n¡Gracias por tu compra!", "Pago Exitoso", JOptionPane.INFORMATION_MESSAGE);
+        carrito.clear();
+    } 
+    else if (seleccionAccion == 1) {
+
+        String indiceStr = JOptionPane.showInputDialog(this, "Ingresa el número (1 al " + carrito.size() + ") del libro que deseas quitar del carrito:", "Quitar Libro", JOptionPane.QUESTION_MESSAGE);
+        
+        if (indiceStr != null) {
+            try {
+                int index = Integer.parseInt(indiceStr.trim()) - 1;
+                if (index >= 0 && index < carrito.size()) {
+                    Libro libroQuitado = carrito.remove(index);
+                    // Devolver el stock al inventario
+                    libroQuitado.setStock(libroQuitado.getStock() + 1);
+                    actualizarTabla(txtBuscar.getText());
+                    JOptionPane.showMessageDialog(this, "Se ha eliminado '" + libroQuitado.getTitulo() + "' del carrito.", "Libro Retirado", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Número de ítem inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingresa un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
     }//GEN-LAST:event_btnVerCarritoActionPerformed
 

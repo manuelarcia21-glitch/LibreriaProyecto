@@ -7,14 +7,16 @@ public class Libro {
     private String categoria;
     private double precio;
     private int stock;
+    private String rutaImagen; // Nuevo atributo para la portada
 
-    public Libro(String isbn, String titulo, String autor, String categoria, double precio, int stock) {
+    public Libro(String isbn, String titulo, String autor, String categoria, double precio, int stock, String rutaImagen) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.autor = autor;
         this.categoria = categoria;
         this.precio = precio;
         this.stock = stock;
+        this.rutaImagen = rutaImagen;
     }
 
     public String getIsbn() { return isbn; }
@@ -24,4 +26,5 @@ public class Libro {
     public double getPrecio() { return precio; }
     public int getStock() { return stock; }
     public void setStock(int stock) { this.stock = stock; }
+    public String getRutaImagen() { return rutaImagen; }
 }
