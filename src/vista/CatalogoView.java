@@ -8,6 +8,7 @@ import modelo.Libro;
 public class CatalogoView extends javax.swing.JFrame {
     private final ArrayList<Libro> carrito = new ArrayList<>();
     private final ArrayList<Libro> listaLibros = new ArrayList<>();
+    private final ArrayList<Libro> listaDeseos = new ArrayList<>();
     private DefaultTableModel modeloTabla;
 
     public CatalogoView() {
@@ -76,6 +77,8 @@ private void configurarTabla() {
         btnComprar = new javax.swing.JButton();
         btnAgregarCarrito = new javax.swing.JButton();
         btnVerCarrito = new javax.swing.JButton();
+        btnAgregarDeseos = new javax.swing.JButton();
+        btnVerDeseos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,32 +116,46 @@ private void configurarTabla() {
         btnVerCarrito.setText("Ver Carrito");
         btnVerCarrito.addActionListener(this::btnVerCarritoActionPerformed);
 
+        btnAgregarDeseos.setText("Añadir a lista de deseados");
+        btnAgregarDeseos.addActionListener(this::btnAgregarDeseosActionPerformed);
+
+        btnVerDeseos.setText("Ver lista de deseados");
+        btnVerDeseos.addActionListener(this::btnVerDeseosActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(569, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(btnAgregarCarrito)
-                .addGap(90, 90, 90)
+                .addGap(18, 18, 18)
                 .addComponent(btnVerCarrito)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnComprar)
-                .addGap(71, 71, 71)
+                .addGap(18, 18, 18)
                 .addComponent(btnVerDetalle)
-                .addGap(92, 92, 92)
-                .addComponent(btnCerrarSesion)
-                .addGap(20, 20, 20))
+                .addGap(18, 18, 18)
+                .addComponent(btnAgregarDeseos)
+                .addGap(38, 38, 38)
+                .addComponent(btnVerDeseos)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCerrarSesion))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(569, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(14, 14, 14))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 882, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,17 +164,20 @@ private void configurarTabla() {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addGap(46, 46, 46)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(43, 43, 43)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnCerrarSesion))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVerDetalle)
-                    .addComponent(btnCerrarSesion)
                     .addComponent(btnComprar)
                     .addComponent(btnAgregarCarrito)
-                    .addComponent(btnVerCarrito))
+                    .addComponent(btnVerCarrito)
+                    .addComponent(btnAgregarDeseos)
+                    .addComponent(btnVerDeseos))
                 .addContainerGap())
         );
 
@@ -424,6 +444,104 @@ if (carrito.isEmpty()) {
     }
     }//GEN-LAST:event_btnVerCarritoActionPerformed
 
+    private void btnAgregarDeseosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarDeseosActionPerformed
+int filaSeleccionada = tblLibros.getSelectedRow();
+
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione un libro de la tabla para añadirlo a su lista de deseos.", "Sin selección", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String isbnTabla = tblLibros.getValueAt(filaSeleccionada, 0).toString();
+    Libro libroSeleccionado = null;
+
+    for (Libro l : listaLibros) {
+        if (l.getIsbn().equals(isbnTabla)) {
+            libroSeleccionado = l;
+            break;
+        }
+    }
+
+    if (libroSeleccionado == null) {
+        return;
+    }
+
+    if (listaDeseos.contains(libroSeleccionado)) {
+        JOptionPane.showMessageDialog(this, "'" + libroSeleccionado.getTitulo() + "' ya está en tu lista de deseos.", "Ya guardado", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    listaDeseos.add(libroSeleccionado);
+    JOptionPane.showMessageDialog(this, "¡Se añadió '" + libroSeleccionado.getTitulo() + "' a tu lista de deseos!", "Lista de Deseos", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnAgregarDeseosActionPerformed
+
+    private void btnVerDeseosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDeseosActionPerformed
+if (listaDeseos.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Tu lista de deseos está vacía.", "Lista de Deseos", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    StringBuilder sb = new StringBuilder("=============== LISTA DE DESEOS ===============\n");
+    for (int i = 0; i < listaDeseos.size(); i++) {
+        Libro l = listaDeseos.get(i);
+        sb.append((i + 1) + ". " + l.getTitulo() + " - $" + String.format("%.2f", l.getPrecio())
+                + " (Stock: " + l.getStock() + ")\n");
+    }
+    sb.append("===============================================\n");
+
+    String[] opciones = {"Mover al Carrito", "Quitar de la Lista", "Cerrar"};
+    int seleccion = JOptionPane.showOptionDialog(
+            this,
+            sb.toString() + "\n¿Qué acción deseas realizar?",
+            "Gestionar Lista de Deseos",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.PLAIN_MESSAGE,
+            null,
+            opciones,
+            opciones[0]
+    );
+
+    if (seleccion == 0 || seleccion == 1) {
+        String indiceStr = JOptionPane.showInputDialog(
+                this,
+                "Ingresa el número (1 al " + listaDeseos.size() + ") del libro:",
+                seleccion == 0 ? "Mover al Carrito" : "Quitar de la Lista",
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (indiceStr == null) {
+            return;
+        }
+
+        try {
+            int idx = Integer.parseInt(indiceStr.trim()) - 1;
+            if (idx < 0 || idx >= listaDeseos.size()) {
+                JOptionPane.showMessageDialog(this, "Número de libro inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Libro libroElegido = listaDeseos.get(idx);
+
+            if (seleccion == 0) {
+                if (libroElegido.getStock() <= 0) {
+                    JOptionPane.showMessageDialog(this, "No hay stock disponible para mover este libro al carrito.", "Sin stock", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                carrito.add(libroElegido);
+                libroElegido.setStock(libroElegido.getStock() - 1);
+                listaDeseos.remove(idx);
+                actualizarTabla(txtBuscar.getText());
+                JOptionPane.showMessageDialog(this, "Se movió 1 unidad de '" + libroElegido.getTitulo() + "' al carrito.", "Movido al Carrito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                listaDeseos.remove(idx);
+                JOptionPane.showMessageDialog(this, "Se eliminó '" + libroElegido.getTitulo() + "' de la lista de deseos.", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ingresa un número entero válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    }//GEN-LAST:event_btnVerDeseosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -448,9 +566,11 @@ public static void main(String args[]) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCarrito;
+    private javax.swing.JButton btnAgregarDeseos;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnComprar;
     private javax.swing.JButton btnVerCarrito;
+    private javax.swing.JButton btnVerDeseos;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
