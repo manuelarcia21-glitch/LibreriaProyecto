@@ -14,7 +14,9 @@ Aplicación de escritorio desarrollada en Java utilizando JFrame (Swing) para la
 - [x] **Módulo de Compras / Ventas:** Simulación de carrito y transacciones con validación de stock en tiempo real, cálculo de totales y generación de tickets de compra.
 - [x] **Módulo de Carrito de Compras:** Sistema de acumulación de artículos, gestión de múltiples selecciones, cálculo automático del total general y pasarela de pago simulada.
 - [x] **Lista de Deseos:** Guardado de libros favoritos, consulta del listado, eliminación de elementos y traslado directo al carrito de compras con validación de stock.
+- [x] **Historial de Compras y Métricas Base:** Registro de compras realizadas con fecha, usuario, cantidad y total, junto con consulta de compradores por libro para el panel administrativo.
 ## Instrucciones de Ejecución
+
 1. Clonar o descargar el repositorio.
 2. Abrir el proyecto en **NetBeans IDE**.
 3. Ejecutar el archivo principal `LoginView.java` (clic derecho -> *Run File* o presionar `Shift + F6`).

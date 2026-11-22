@@ -5,12 +5,20 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Libro;
 
-public class CatalogoView extends javax.swing.JFrame {
+public class CatalogoView extends javax.swing.JFrame {  
     private final ArrayList<Libro> carrito = new ArrayList<>();
     private final ArrayList<Libro> listaLibros = new ArrayList<>();
     private final ArrayList<Libro> listaDeseos = new ArrayList<>();
     private DefaultTableModel modeloTabla;
-
+    private final ArrayList<modelo.RegistroCompra> historialCompras = new ArrayList<>();
+    private String usuarioActual = "invitado";
+    
+public CatalogoView(String usuarioActual) {
+    this();
+    if (usuarioActual != null && !usuarioActual.isBlank()) {
+        this.usuarioActual = usuarioActual;
+    }
+}
     public CatalogoView() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -40,6 +48,7 @@ private void configurarTabla() {
         listaLibros.add(new Libro("978-0201633610", "Design Patterns", "Erich Gamma et al.", "Arquitectura", 50.00, 5, "img/design_patern.jpg"));
         listaLibros.add(new Libro("978-8445000663", "El Señor de los Anillos: La comunidad del anillo", "J.R.R. Tolkien", "Fantasía", 29.90, 10, "img/señor_de_los_anillos.jpg"));
     }
+        
 
     private void actualizarTabla(String filtro) {
         modeloTabla.setRowCount(0);
@@ -79,6 +88,7 @@ private void configurarTabla() {
         btnVerCarrito = new javax.swing.JButton();
         btnAgregarDeseos = new javax.swing.JButton();
         btnVerDeseos = new javax.swing.JButton();
+        btnHistorialActionPerformed = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,6 +132,9 @@ private void configurarTabla() {
         btnVerDeseos.setText("Ver lista de deseados");
         btnVerDeseos.addActionListener(this::btnVerDeseosActionPerformed);
 
+        btnHistorialActionPerformed.setText("Historial de compra");
+        btnHistorialActionPerformed.addActionListener(this::btnHistorialActionPerformedActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -133,18 +146,20 @@ private void configurarTabla() {
                 .addComponent(btnVerCarrito)
                 .addGap(18, 18, 18)
                 .addComponent(btnComprar)
-                .addGap(18, 18, 18)
-                .addComponent(btnVerDetalle)
-                .addGap(18, 18, 18)
-                .addComponent(btnAgregarDeseos)
-                .addGap(38, 38, 38)
-                .addComponent(btnVerDeseos)
+                .addGap(32, 32, 32)
+                .addComponent(btnHistorialActionPerformed)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVerDeseos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAgregarDeseos)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnVerDetalle)
+                        .addGap(32, 32, 32)
                         .addComponent(btnCerrarSesion))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap(569, Short.MAX_VALUE)
@@ -167,17 +182,18 @@ private void configurarTabla() {
                 .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(btnCerrarSesion))
+                    .addComponent(btnCerrarSesion)
+                    .addComponent(btnVerDetalle)
+                    .addComponent(btnAgregarDeseos)
+                    .addComponent(btnVerDeseos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVerDetalle)
                     .addComponent(btnComprar)
                     .addComponent(btnAgregarCarrito)
                     .addComponent(btnVerCarrito)
-                    .addComponent(btnAgregarDeseos)
-                    .addComponent(btnVerDeseos))
+                    .addComponent(btnHistorialActionPerformed))
                 .addContainerGap())
         );
 
@@ -417,9 +433,25 @@ if (carrito.isEmpty()) {
             opciones[0]);
 
     if (seleccionAccion == 0) {
+        java.util.LinkedHashMap<Libro, Integer> resumenCantidades = new java.util.LinkedHashMap<>();
+for (Libro l : carrito) {
+    resumenCantidades.put(l, resumenCantidades.getOrDefault(l, 0) + 1);
+}
 
-        JOptionPane.showMessageDialog(this, "¡Compra procesada con éxito!\nTotal cancelado: $" + String.format("%.2f", totalGeneral) + "\n¡Gracias por tu compra!", "Pago Exitoso", JOptionPane.INFORMATION_MESSAGE);
-        carrito.clear();
+for (java.util.Map.Entry<Libro, Integer> entry : resumenCantidades.entrySet()) {
+    Libro lib = entry.getKey();
+    int cant = entry.getValue();
+    double subtotal = lib.getPrecio() * cant;
+    historialCompras.add(new modelo.RegistroCompra(usuarioActual, lib, cant, subtotal));
+}
+
+JOptionPane.showMessageDialog(
+        this,
+        "¡Compra procesada con éxito!\nTotal cancelado: $" + String.format("%.2f", totalGeneral) + "\n¡Gracias por tu compra!",
+        "Pago Exitoso",
+        JOptionPane.INFORMATION_MESSAGE
+);
+carrito.clear();
     } 
     else if (seleccionAccion == 1) {
 
@@ -430,7 +462,6 @@ if (carrito.isEmpty()) {
                 int index = Integer.parseInt(indiceStr.trim()) - 1;
                 if (index >= 0 && index < carrito.size()) {
                     Libro libroQuitado = carrito.remove(index);
-                    // Devolver el stock al inventario
                     libroQuitado.setStock(libroQuitado.getStock() + 1);
                     actualizarTabla(txtBuscar.getText());
                     JOptionPane.showMessageDialog(this, "Se ha eliminado '" + libroQuitado.getTitulo() + "' del carrito.", "Libro Retirado", JOptionPane.INFORMATION_MESSAGE);
@@ -542,9 +573,37 @@ if (listaDeseos.isEmpty()) {
     }
     }//GEN-LAST:event_btnVerDeseosActionPerformed
 
+    private void btnHistorialActionPerformedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformedActionPerformed
+if (historialCompras.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Aún no hay compras registradas.", "Historial de Compras", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    StringBuilder sb = new StringBuilder("=============== HISTORIAL DE COMPRAS ===============\n");
+    for (int i = 0; i < historialCompras.size(); i++) {
+        modelo.RegistroCompra reg = historialCompras.get(i);
+        sb.append((i + 1) + ". [" + reg.getFechaHora() + "] Usuario: " + reg.getUsuarioComprador()
+                + " | Libro: " + reg.getLibro().getTitulo()
+                + " | Cant.: " + reg.getCantidad()
+                + " | Total: $" + String.format("%.2f", reg.getTotalPagado()) + "\n");
+    }
+    sb.append("====================================================\n");
+
+    JOptionPane.showMessageDialog(this, sb.toString(), "Historial de Compras", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnHistorialActionPerformedActionPerformed
+public int contarCompradoresPorLibro(String isbn) {
+    java.util.HashSet<String> compradores = new java.util.HashSet<>();
+    for (modelo.RegistroCompra reg : historialCompras) {
+        if (reg.getLibro().getIsbn().equals(isbn)) {
+            compradores.add(reg.getUsuarioComprador());
+        }
+    }
+    return compradores.size();
+}
     /**
      * @param args the command line arguments
      */
+   
 public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -569,6 +628,7 @@ public static void main(String args[]) {
     private javax.swing.JButton btnAgregarDeseos;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnComprar;
+    private javax.swing.JButton btnHistorialActionPerformed;
     private javax.swing.JButton btnVerCarrito;
     private javax.swing.JButton btnVerDeseos;
     private javax.swing.JButton btnVerDetalle;
