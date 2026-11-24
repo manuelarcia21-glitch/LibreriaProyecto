@@ -15,6 +15,7 @@ Aplicación de escritorio desarrollada en Java utilizando JFrame (Swing) para la
 - [x] **Módulo de Carrito de Compras:** Sistema de acumulación de artículos, gestión de múltiples selecciones, cálculo automático del total general y pasarela de pago simulada.
 - [x] **Lista de Deseos:** Guardado de libros favoritos, consulta del listado, eliminación de elementos y traslado directo al carrito de compras con validación de stock.
 - [x] **Historial de Compras y Métricas Base:** Registro de compras realizadas con fecha, usuario, cantidad y total, junto con consulta de compradores por libro para el panel administrativo.
+- [x] **Control de Roles y Panel de Administrador (`AdminView`):** Diferenciación de permisos entre usuario y administrador desde `LoginView` y `CatalogoView`, con vista dedicada para agregar libros, actualizar stock, eliminar títulos y consultar compradores distintos y unidades vendidas por libro.
 ## Instrucciones de Ejecución
 
 1. Clonar o descargar el repositorio.

@@ -12,11 +12,23 @@ public class CatalogoView extends javax.swing.JFrame {
     private DefaultTableModel modeloTabla;
     private final ArrayList<modelo.RegistroCompra> historialCompras = new ArrayList<>();
     private String usuarioActual = "invitado";
+    private String rolActual = "USUARIO";
     
-public CatalogoView(String usuarioActual) {
+public CatalogoView(String usuarioActual, String rolActual) {
     this();
     if (usuarioActual != null && !usuarioActual.isBlank()) {
         this.usuarioActual = usuarioActual;
+    }
+    if (rolActual != null && !rolActual.isBlank()) {
+        this.rolActual = rolActual.toUpperCase();
+    }
+    configurarPermisosRol();
+}
+private void configurarPermisosRol() {
+    boolean esAdmin = "ADMIN".equalsIgnoreCase(rolActual);
+    if (btnPanelAdmin != null) {
+        btnPanelAdmin.setVisible(esAdmin);
+        btnPanelAdmin.setEnabled(esAdmin);
     }
 }
     public CatalogoView() {
@@ -50,7 +62,7 @@ private void configurarTabla() {
     }
         
 
-    private void actualizarTabla(String filtro) {
+    public void actualizarTabla(String filtro) {
         modeloTabla.setRowCount(0);
         String busqueda = filtro.toLowerCase().trim();
 
@@ -89,6 +101,7 @@ private void configurarTabla() {
         btnAgregarDeseos = new javax.swing.JButton();
         btnVerDeseos = new javax.swing.JButton();
         btnHistorialActionPerformed = new javax.swing.JButton();
+        btnPanelAdmin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,6 +148,9 @@ private void configurarTabla() {
         btnHistorialActionPerformed.setText("Historial de compra");
         btnHistorialActionPerformed.addActionListener(this::btnHistorialActionPerformedActionPerformed);
 
+        btnPanelAdmin.setText("Ventana de administrador");
+        btnPanelAdmin.addActionListener(this::btnPanelAdminActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -148,7 +164,9 @@ private void configurarTabla() {
                 .addComponent(btnComprar)
                 .addGap(32, 32, 32)
                 .addComponent(btnHistorialActionPerformed)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnPanelAdmin)
+                .addGap(39, 39, 39))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -193,7 +211,8 @@ private void configurarTabla() {
                     .addComponent(btnComprar)
                     .addComponent(btnAgregarCarrito)
                     .addComponent(btnVerCarrito)
-                    .addComponent(btnHistorialActionPerformed))
+                    .addComponent(btnHistorialActionPerformed)
+                    .addComponent(btnPanelAdmin))
                 .addContainerGap())
         );
 
@@ -591,6 +610,16 @@ if (historialCompras.isEmpty()) {
 
     JOptionPane.showMessageDialog(this, sb.toString(), "Historial de Compras", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnHistorialActionPerformedActionPerformed
+
+    private void btnPanelAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelAdminActionPerformed
+if (!"ADMIN".equalsIgnoreCase(rolActual)) {
+        JOptionPane.showMessageDialog(this, "No tienes permisos de administrador.", "Acceso denegado", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    AdminView adminVentana = new AdminView(listaLibros, historialCompras, this, usuarioActual);
+    adminVentana.setVisible(true);
+    this.setVisible(false);
+    }//GEN-LAST:event_btnPanelAdminActionPerformed
 public int contarCompradoresPorLibro(String isbn) {
     java.util.HashSet<String> compradores = new java.util.HashSet<>();
     for (modelo.RegistroCompra reg : historialCompras) {
@@ -629,6 +658,7 @@ public static void main(String args[]) {
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnComprar;
     private javax.swing.JButton btnHistorialActionPerformed;
+    private javax.swing.JButton btnPanelAdmin;
     private javax.swing.JButton btnVerCarrito;
     private javax.swing.JButton btnVerDeseos;
     private javax.swing.JButton btnVerDetalle;

@@ -15,6 +15,7 @@ public class LoginView extends javax.swing.JFrame {
     /**
      * Creates new form LoginView
      */
+    
 public LoginView() {
         initComponents();
         this.setLocationRelativeTo(null); 
@@ -22,6 +23,7 @@ public LoginView() {
         
         usuariosRegistrados.put("admin", "1234");
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -106,16 +108,15 @@ String usuario = txtUsuario.getText().trim();
             return;
         }
 
-        // Validación contra el HashMap de usuarios registrados
         if (usuariosRegistrados.containsKey(usuario) && usuariosRegistrados.get(usuario).equals(password)) {
-            JOptionPane.showMessageDialog(this, "¡Bienvenido al sistema, " + usuario + "!", "Acceso Exitoso", JOptionPane.INFORMATION_MESSAGE);
-            
-            CatalogoView catalogo = new CatalogoView();
+            String rol = "admin".equalsIgnoreCase(usuario) ? "ADMIN" : "USUARIO";
+            CatalogoView catalogo = new CatalogoView(usuario, rol);
             catalogo.setVisible(true);
             this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error de acceso", JOptionPane.ERROR_MESSAGE);
         }
+        
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void txtContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaActionPerformed

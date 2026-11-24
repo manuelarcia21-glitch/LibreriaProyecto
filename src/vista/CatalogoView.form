@@ -51,6 +51,8 @@
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="btnHistorialActionPerformed" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="btnPanelAdmin" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
@@ -105,6 +107,7 @@
                       <Component id="btnAgregarCarrito" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnVerCarrito" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnHistorialActionPerformed" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPanelAdmin" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -207,6 +210,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHistorialActionPerformedActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnPanelAdmin">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Ventana de administrador"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPanelAdminActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
