@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Libro;
 import modelo.RegistroCompra;
+import modelo.RepositorioDatos;
 
 public class AdminView extends javax.swing.JFrame {
 
@@ -15,40 +16,31 @@ public class AdminView extends javax.swing.JFrame {
     private final String usuarioAdmin;
     private DefaultTableModel modeloTabla;
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AdminView.class.getName());
+    public AdminView() {
+        this(RepositorioDatos.getLibros(), RepositorioDatos.getHistorial(), null, "admin");
+    }
 
-    /**
-     * Creates new form AdminView
-     */
 public AdminView(ArrayList<Libro> listaLibros,
                      ArrayList<RegistroCompra> historialCompras,
                      CatalogoView catalogoPadre,
                      String usuarioAdmin) {
-        aplicarEstiloNimbus();
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setTitle("Panel de Administrador - Librería");
 
-        this.listaLibros = (listaLibros != null) ? listaLibros : new ArrayList<>();
-        this.historialCompras = (historialCompras != null) ? historialCompras : new ArrayList<>();
+        this.listaLibros = (listaLibros != null) ? listaLibros : RepositorioDatos.getLibros();
+        this.historialCompras = (historialCompras != null) ? historialCompras : RepositorioDatos.getHistorial();
         this.catalogoPadre = catalogoPadre;
         this.usuarioAdmin = (usuarioAdmin != null && !usuarioAdmin.isBlank()) ? usuarioAdmin : "admin";
+
+        this.setTitle("Marketplace y Gestión de Inventario - Usuario: " + this.usuarioAdmin);
+        if (txtRutaImagen != null && txtRutaImagen.getText().isBlank()) {
+            txtRutaImagen.setText("img/portada.jpg");
+        }
 
         configurarTabla();
         refrescarTabla();
     }
-private void aplicarEstiloNimbus() {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+
 private void configurarTabla() {
         modeloTabla = new DefaultTableModel(
                 new Object[]{"ISBN", "Título", "Autor", "Categoría", "Precio", "Stock", "Compradores"},
@@ -59,7 +51,7 @@ private void configurarTabla() {
                 return false;
             }
         };
-        tblAdminLibros.setModel(modeloTabla)   ;
+        tblAdminLibros.setModel(modeloTabla);
     }
 public int contarCompradoresPorLibro(String isbn) {
         HashSet<String> compradores = new HashSet<>();
@@ -102,6 +94,7 @@ private Libro buscarLibroPorIsbn(String isbn) {
         }
         return null;
     }
+
 private void limpiarCampos() {
         txtIsbn.setText("");
         txtTitulo.setText("");
@@ -111,7 +104,6 @@ private void limpiarCampos() {
         txtStock.setText("");
         txtRutaImagen.setText("img/portada.jpg");
     }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -281,7 +273,7 @@ private void limpiarCampos() {
     }//GEN-LAST:event_txtPrecioActionPerformed
 
     private void btnAgregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarLibroActionPerformed
-String isbn = txtIsbn.getText().trim();
+        String isbn = txtIsbn.getText().trim();
         String titulo = txtTitulo.getText().trim();
         String autor = txtAutor.getText().trim();
         String categoria = txtCategoria.getText().trim();
@@ -291,12 +283,22 @@ String isbn = txtIsbn.getText().trim();
 
         if (isbn.isEmpty() || titulo.isEmpty() || autor.isEmpty() || categoria.isEmpty()
                 || precioStr.isEmpty() || stockStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Complete todos los campos obligatorios del libro.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Complete todos los campos obligatorios del libro.",
+                    "Campos incompletos",
+                    JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
 
         if (buscarLibroPorIsbn(isbn) != null) {
-            JOptionPane.showMessageDialog(this, "Ya existe un libro registrado con ese ISBN.", "ISBN duplicado", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ya existe un libro registrado con ese ISBN.",
+                    "ISBN duplicado",
+                    JOptionPane.ERROR_MESSAGE
+            );
             return;
         }
 
@@ -305,7 +307,12 @@ String isbn = txtIsbn.getText().trim();
             int stock = Integer.parseInt(stockStr);
 
             if (precio < 0 || stock < 0) {
-                JOptionPane.showMessageDialog(this, "El precio y el stock no pueden ser negativos.", "Valores inválidos", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        this,
+                        "El precio y el stock no pueden ser negativos.",
+                        "Valores inválidos",
+                        JOptionPane.WARNING_MESSAGE
+                );
                 return;
             }
 
@@ -315,18 +322,36 @@ String isbn = txtIsbn.getText().trim();
 
             Libro nuevo = new Libro(isbn, titulo, autor, categoria, precio, stock, rutaImg);
             listaLibros.add(nuevo);
+            RepositorioDatos.guardarLibrosEnArchivo();
             refrescarTabla();
             limpiarCampos();
-            JOptionPane.showMessageDialog(this, "Libro agregado correctamente al inventario.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Libro publicado y guardado correctamente en el catálogo.",
+                    "Registro exitoso",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Ingrese valores numéricos válidos para Precio y Stock.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese valores numéricos válidos para Precio y Stock.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
+        
     }//GEN-LAST:event_btnAgregarLibroActionPerformed
 
     private void btnActualizarStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarStockActionPerformed
 int fila = tblAdminLibros.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione un libro en la tabla para actualizar su stock.", "Sin selección", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un libro en la tabla para actualizar su stock.",
+                    "Sin selección",
+                    JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
 
@@ -350,21 +375,44 @@ int fila = tblAdminLibros.getSelectedRow();
         try {
             int nuevoStock = Integer.parseInt(nuevoStockStr.trim());
             if (nuevoStock < 0) {
-                JOptionPane.showMessageDialog(this, "El stock no puede ser negativo.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        this,
+                        "El stock no puede ser negativo.",
+                        "Valor inválido",
+                        JOptionPane.WARNING_MESSAGE
+                );
                 return;
             }
+
             libro.setStock(nuevoStock);
+            RepositorioDatos.guardarLibrosEnArchivo();
             refrescarTabla();
-            JOptionPane.showMessageDialog(this, "Stock actualizado a " + nuevoStock + " unidades.", "Actualizado", JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Stock actualizado a " + nuevoStock + " unidades.",
+                    "Actualizado",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Ingrese un número entero válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese un número entero válido.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }//GEN-LAST:event_btnActualizarStockActionPerformed
 
     private void btnEliminarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarLibroActionPerformed
 int fila = tblAdminLibros.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione un libro en la tabla para eliminarlo.", "Sin selección", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un libro en la tabla para eliminarlo.",
+                    "Sin selección",
+                    JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
 
@@ -383,15 +431,27 @@ int fila = tblAdminLibros.getSelectedRow();
 
         if (confirm == JOptionPane.YES_OPTION) {
             listaLibros.remove(libro);
+            RepositorioDatos.guardarLibrosEnArchivo();
             refrescarTabla();
-            JOptionPane.showMessageDialog(this, "Libro eliminado del inventario.", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Libro eliminado del inventario.",
+                    "Eliminado",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         }
     }//GEN-LAST:event_btnEliminarLibroActionPerformed
 
     private void btnVerCompradoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCompradoresActionPerformed
 int fila = tblAdminLibros.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione un libro para consultar sus compradores.", "Sin selección", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un libro para consultar sus compradores.",
+                    "Sin selección",
+                    JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
 
@@ -419,6 +479,9 @@ int fila = tblAdminLibros.getSelectedRow();
 if (catalogoPadre != null) {
             catalogoPadre.actualizarTabla("");
             catalogoPadre.setVisible(true);
+        } else {
+            CatalogoView catalogo = new CatalogoView(usuarioAdmin);
+            catalogo.setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_btnVolverCatalogoActionPerformed
@@ -426,26 +489,8 @@ if (catalogoPadre != null) {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-new AdminView(new java.util.ArrayList<>(), new java.util.ArrayList<>(), null, "admin").setVisible(true);    
+public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> new AdminView().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
