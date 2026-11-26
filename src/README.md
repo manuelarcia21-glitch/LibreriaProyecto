@@ -1,24 +1,39 @@
-# Sistema de Librería en Línea - Avance del Proyecto Final
+# Librería Virtual y Marketplace (`LibreriaProyecto`)
 
-## Descripción del Proyecto
-Aplicación de escritorio desarrollada en Java utilizando JFrame (Swing) para la gestión de una librería virtual. Este avance incluye el módulo funcional de inicio de sesión (**Login**), el **sistema de registro de nuevos usuarios** y la estructura inicial del **Catálogo**.
+Aplicación de escritorio desarrollada en **Java** con **Swing (`JFrame`)** en **Apache NetBeans**, diseñada como una librería virtual con modo **marketplace** para publicar y gestionar libros, carrito de compras multi-ítem con control de stock, lista de deseos, historial de compras y persistencia en archivos entre sesiones.
 
-## Integrantes
-- Manuel Esteban Arcia Pastrama 
+## Características Principales
 
-## Módulos Implementados
-- [x] **Módulo de Login:** Ventana de autenticación con validación de credenciales (incluye usuario administrador por defecto y cuentas personalizadas).
-- [x] **Módulo de Registro:** Funcionalidad interactiva para que nuevos usuarios creen su propia cuenta y accedan al sistema.
-- [x] **Ventana de Catálogo:** Interfaz base para la visualización de inventario.
-- [x] **Control de Versiones:** Repositorio en GitHub con historial de commits estructurados.
-- [x] **Módulo de Compras / Ventas:** Simulación de carrito y transacciones con validación de stock en tiempo real, cálculo de totales y generación de tickets de compra.
-- [x] **Módulo de Carrito de Compras:** Sistema de acumulación de artículos, gestión de múltiples selecciones, cálculo automático del total general y pasarela de pago simulada.
-- [x] **Lista de Deseos:** Guardado de libros favoritos, consulta del listado, eliminación de elementos y traslado directo al carrito de compras con validación de stock.
-- [x] **Historial de Compras y Métricas Base:** Registro de compras realizadas con fecha, usuario, cantidad y total, junto con consulta de compradores por libro para el panel administrativo.
-- [x] **Control de Roles y Panel de Administrador (`AdminView`):** Diferenciación de permisos entre usuario y administrador desde `LoginView` y `CatalogoView`, con vista dedicada para agregar libros, actualizar stock, eliminar títulos y consultar compradores distintos y unidades vendidas por libro.
-## Instrucciones de Ejecución
+- [x] **Acceso y Registro de Usuarios (`LoginView`):** Autenticación de cuentas y registro de nuevos usuarios en sesión compartida con estilo *Nimbus*.
+- [x] **Catálogo con Búsqueda en Tiempo Real (`CatalogoView`):** Visualización tabular de libros (ISBN, título, autor, categoría, precio y stock) con filtrado dinámico mientras se escribe.
+- [x] **Detalle de Libro con Portada Escalada:** Consulta de información completa del libro seleccionado junto con su imagen de portada escalada proporcionalmente.
+- [x] **Carrito de Compras Multi-Ítem:** Selección de cantidades, cálculo de subtotales y total general, devolución automática de stock al quitar ítems o cerrar sesión sin pagar, y confirmación de compra.
+- [x] **Lista de Deseos:** Guardado de libros de interés con opciones para mover unidades al carrito o eliminarlas de la lista.
+- [x] **Historial de Compras:** Registro de compras realizadas (comprador, libro, cantidad, total pagado y fecha/hora).
+- [x] **Modo Marketplace y Gestión de Inventario (`AdminView`):** Ventana dedicada para que cualquier usuario autenticado publique nuevos libros, actualice el stock, elimine títulos y consulte compradores distintos (`HashSet`) y unidades vendidas por libro.
+- [x] **Selector de Portada con `JFileChooser` (`AdminView`):** Exploración filtrada de archivos de imagen (`.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`) y copia local en `img/` para asociar portadas fácilmente.
+- [x] **Persistencia Entre Sesiones (`RepositorioDatos`):** Almacenamiento y recuperación en archivos de texto (`datos_libros.txt` y `datos_historial.txt`) para conservar el catálogo y el historial al cerrar sesión, cambiar de usuario o reiniciar la aplicación.
 
-1. Clonar o descargar el repositorio.
-2. Abrir el proyecto en **NetBeans IDE**.
-3. Ejecutar el archivo principal `LoginView.java` (clic derecho -> *Run File* o presionar `Shift + F6`).
-4. Iniciar sesión con el usuario por defecto (`admin` / `1234`) o registrar una nueva cuenta usando el botón "Registrarse".
+## Estructura del Proyecto
+
+- `src/modelo/Libro.java`: Modelo de datos del libro (ISBN, título, autor, categoría, precio, stock y ruta de portada).
+- `src/modelo/RegistroCompra.java`: Modelo del registro de cada compra efectuada.
+- `src/modelo/RepositorioDatos.java`: Repositorio central con persistencia en archivos y control de inicialización sin recursión.
+- `src/vista/LoginView.java`: Ventana de inicio de sesión y registro de usuarios.
+- `src/vista/CatalogoView.java`: Ventana principal de búsqueda, detalle, carrito, lista de deseos e historial.
+- `src/vista/AdminView.java`: Ventana de publicación de libros, administración de stock, métricas de compradores y selección de portada.
+- `datos_libros.txt`: Archivo generado automáticamente con el inventario persistido.
+- `datos_historial.txt`: Archivo generado automáticamente con el historial de compras persistido.
+- `img/`: Carpeta local de imágenes de portada de los libros.
+
+## Tecnologías y Estructuras Utilizadas
+
+- **Lenguaje y UI:** Java, Swing (`JFrame`, `JTable`, `JOptionPane`, `JFileChooser`), Look and Feel *Nimbus*.
+- **IDE y Control de Versiones:** Apache NetBeans, Git y GitHub.
+- **Estructuras de Datos:** `HashMap` para usuarios, `ArrayList` para inventario, carrito, deseos e historial, `LinkedHashMap` para agrupar cantidades en el carrito y `HashSet` para calcular compradores distintos por libro.
+
+## Ejecución en Apache NetBeans
+
+1. Clona o abre el repositorio en **Apache NetBeans**.
+2. Verifica que el paquete `modelo` y el paquete `vista` estén sin errores de compilación.
+3. Ejecuta el proyecto (**Clean and Build** y luego **Run** / `Shift + F6`), iniciando desde `LoginView` o la clase principal configurada.

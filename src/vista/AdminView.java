@@ -7,6 +7,13 @@ import javax.swing.table.DefaultTableModel;
 import modelo.Libro;
 import modelo.RegistroCompra;
 import modelo.RepositorioDatos;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class AdminView extends javax.swing.JFrame {
 
@@ -129,6 +136,7 @@ private void limpiarCampos() {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        btnExplorarImagen = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -178,6 +186,9 @@ private void limpiarCampos() {
 
         jLabel7.setText("Imagen:");
 
+        btnExplorarImagen.setText("Añadir imagen");
+        btnExplorarImagen.addActionListener(this::btnExplorarImagenActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -208,19 +219,21 @@ private void limpiarCampos() {
                     .addComponent(txtStock, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
                     .addComponent(txtPrecio, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtCategoria, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(99, 99, 99)
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtRutaImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtRutaImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExplorarImagen))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(btnAgregarLibro)
-                .addGap(98, 98, 98)
+                .addGap(75, 75, 75)
                 .addComponent(btnActualizarStock)
-                .addGap(78, 78, 78)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                 .addComponent(btnEliminarLibro)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addGap(63, 63, 63)
                 .addComponent(btnVerCompradores)
                 .addGap(35, 35, 35)
                 .addComponent(btnVolverCatalogo)
@@ -235,21 +248,29 @@ private void limpiarCampos() {
                     .addComponent(jLabel1)
                     .addComponent(txtCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtAutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRutaImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtAutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel6))
+                        .addGap(31, 31, 31))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtRutaImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnExplorarImagen)
+                        .addGap(41, 41, 41)))
                 .addComponent(JScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -486,6 +507,68 @@ if (catalogoPadre != null) {
         this.dispose();
     }//GEN-LAST:event_btnVolverCatalogoActionPerformed
 
+    private void btnExplorarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExplorarImagenActionPerformed
+JFileChooser selector = new JFileChooser();
+    selector.setDialogTitle("Seleccionar imagen de portada");
+    selector.setAcceptAllFileFilterUsed(false);
+
+    FileNameExtensionFilter filtroImagenes = new FileNameExtensionFilter(
+            "Imágenes (*.jpg, *.jpeg, *.png, *.gif, *.webp)",
+            "jpg", "jpeg", "png", "gif", "webp"
+    );
+    selector.addChoosableFileFilter(filtroImagenes);
+
+    // Si ya hay una ruta escrita o existe la carpeta img, intenta posicionarse ahí
+    File carpetaImg = new File("img");
+    if (carpetaImg.exists() && carpetaImg.isDirectory()) {
+        selector.setCurrentDirectory(carpetaImg);
+    }
+
+    int resultado = selector.showOpenDialog(this);
+    if (resultado == JFileChooser.APPROVE_OPTION) {
+        File archivoSeleccionado = selector.getSelectedFile();
+        if (archivoSeleccionado == null || !archivoSeleccionado.exists()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El archivo seleccionado no es válido.",
+                    "Archivo no encontrado",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        try {
+            if (!carpetaImg.exists()) {
+                carpetaImg.mkdirs();
+            }
+
+            Path origen = archivoSeleccionado.toPath().toAbsolutePath().normalize();
+            Path destino = Paths.get("img", archivoSeleccionado.getName()).toAbsolutePath().normalize();
+
+            if (!origen.equals(destino)) {
+                Files.copy(origen, destino, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            txtRutaImagen.setText("img/" + archivoSeleccionado.getName());
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Portada vinculada correctamente: img/" + archivoSeleccionado.getName(),
+                    "Imagen cargada",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (Exception ex) {
+            // Si falla la copia por permisos, conserva la ruta absoluta del archivo elegido
+            txtRutaImagen.setText(archivoSeleccionado.getAbsolutePath());
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Se usará la ruta del archivo seleccionado:\n" + archivoSeleccionado.getAbsolutePath(),
+                    "Aviso",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+    }
+    }//GEN-LAST:event_btnExplorarImagenActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -498,6 +581,7 @@ public static void main(String args[]) {
     private javax.swing.JButton btnActualizarStock;
     private javax.swing.JButton btnAgregarLibro;
     private javax.swing.JButton btnEliminarLibro;
+    private javax.swing.JButton btnExplorarImagen;
     private javax.swing.JButton btnVerCompradores;
     private javax.swing.JButton btnVolverCatalogo;
     private javax.swing.JLabel jLabel1;

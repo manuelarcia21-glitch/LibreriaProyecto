@@ -1,0 +1,152 @@
+Manual de Usuario del Sistema
+Librería Virtual y Marketplace (LibreriaProyecto)
+
+Plataforma: Aplicación de escritorio en Java Swing (JFrame)
+
+Entorno de desarrollo: Apache NetBeans
+1. Introducción y Propósito del Sistema
+
+LibreriaProyecto es una aplicación de escritorio orientada a la gestión de un catálogo de libros y a la operación de un espacio tipo marketplace. Permite a los usuarios autenticarse o registrarse, explorar libros en tiempo real, consultar detalles con imagen de portada, administrar un carrito de compras multi-ítem con control de stock, gestionar una lista de deseos, revisar el historial de compras y publicar o administrar títulos en el panel de marketplace/administración con persistencia en archivos de texto entre sesiones.
+2. Requisitos y Puesta en Marcha
+
+Para ejecutar el sistema en un equipo local:
+
+    Entorno Java: Java JDK instalado y configurado en Apache NetBeans.
+
+    Proyecto: LibreriaProyecto con los paquetes modelo (Libro, RegistroCompra, RepositorioDatos) y vista (LoginView, CatalogoView, AdminView).
+
+    Archivos generados automáticamente: Al iniciar o realizar operaciones, el sistema crea y mantiene datos_libros.txt y datos_historial.txt en la carpeta raíz de ejecución, así como la carpeta img/ al asociar portadas mediante el selector de archivos.
+
+Cómo iniciar la aplicación
+
+    Abre LibreriaProyecto en Apache NetBeans.
+
+    Ejecuta el proyecto (Clean and Build y luego Run o Shift + F6).
+
+    Se abrirá inicialmente la ventana de acceso (LoginView), centrada en pantalla con el Look and Feel Nimbus.
+
+3. Acceso y Registro de Usuarios (LoginView)
+
+La ventana Librería Virtual - Acceso es el punto de entrada al sistema.
+3.1 Iniciar sesión
+
+    Escribe tu nombre de usuario en el campo Usuario.
+
+    Ingresa tu contraseña en el campo Contraseña.
+
+    Haz clic en Iniciar Sesión.
+
+    Si los campos están vacíos, el usuario no existe o la contraseña no coincide, el sistema mostrará un mensaje de advertencia o error indicando el motivo.
+
+    Si las credenciales son correctas, se mostrará un mensaje de bienvenida y se abrirá CatalogoView con tu usuario activo.
+
+3.2 Registrar un nuevo usuario
+
+    Escribe el nombre de usuario deseado en Usuario y define una contraseña en Contraseña.
+
+    Haz clic en Registrarse.
+
+    El sistema verifica que ambos campos estén completos y que el nombre de usuario no esté repetido.
+
+    Una vez registrada la cuenta, se guarda para la sesión actual y se ingresa directamente al catálogo y marketplace.
+
+4. Catálogo, Búsqueda y Detalle de Libros (CatalogoView)
+
+Una vez dentro de Catálogo de Libros y Marketplace, verás la tabla principal con las columnas: ISBN, Título, Autor, Categoría, Precio y Stock.
+4.1 Buscar y filtrar en tiempo real
+
+    Escribe cualquier palabra o código en el campo Buscar (título, autor, categoría o ISBN).
+
+    La tabla se actualiza automáticamente al soltar cada tecla (KeyReleased), mostrando solo los libros que coinciden con el criterio ingresado.
+
+    Borra el texto del campo de búsqueda para volver a ver todo el inventario disponible.
+
+4.2 Ver detalle y portada del libro
+
+    Selecciona una fila en la tabla de libros.
+
+    Haz clic en Ver Detalle.
+
+    Se abrirá un cuadro con la información completa del libro (título, ISBN, autor, categoría, precio y stock disponible).
+
+    Si el libro tiene una ruta de imagen válida y el archivo existe en disco, se mostrará su portada escalada junto a los datos.
+
+5. Carrito de Compras, Lista de Deseos e Historial
+5.1 Agregar al carrito y gestionar el carrito
+
+    Selecciona un libro con stock disponible en la tabla y haz clic en Agregar al Carrito.
+
+    Indica la cantidad de unidades que deseas llevar (debe ser un número entero mayor a 0 y menor o igual al stock disponible).
+
+    El sistema reserva esas unidades descontándolas temporalmente del stock visible en el catálogo y refresca la tabla.
+
+    Para revisar el carrito, haz clic en Ver Carrito. Allí verás el listado agrupado por libro, cantidad, precio unitario, subtotal por ítem y total a pagar, con tres opciones:
+
+        Confirmar y Pagar: Registra cada libro comprado en el historial con tu usuario, cantidad, subtotal y fecha/hora, guarda el inventario actualizado y el historial en archivo, y vacía el carrito.
+
+        Quitar un Libro (Devolver Stock): Permite elegir el número del libro en el carrito para retirarlo y devolver automáticamente al stock todas las unidades que tenías reservadas de ese título.
+
+        Cerrar: Cierra la ventana del carrito sin alterar el contenido.
+
+5.2 Lista de deseos
+
+    Selecciona un libro en la tabla y haz clic en Agregar a Deseos para guardarlo sin reservar stock (evita duplicados si ya está en la lista).
+
+    Haz clic en Lista de Deseos para consultar tus títulos guardados y elegir entre:
+
+        Mover al Carrito: Traslada 1 unidad del libro elegido al carrito y descuenta 1 unidad del stock (siempre que haya stock disponible).
+
+        Quitar de la Lista: Elimina el libro seleccionado de tu lista de deseos.
+
+        Cerrar: Sale del menú de deseos.
+
+5.3 Historial de compras
+
+    Haz clic en Historial de Compras para consultar el registro de compras efectuadas, mostrando fecha/hora, comprador, título del libro, cantidad y total pagado.
+
+    Gracias a la persistencia en datos_historial.txt, este historial se conserva entre sesiones y cambios de usuario.
+
+6. Modo Marketplace y Gestión de Inventario (AdminView)
+
+Cualquier usuario autenticado puede acceder al panel de gestión y publicación haciendo clic en Vender / Panel Admin en la ventana del catálogo.
+6.1 Publicar un nuevo libro con portada (JFileChooser)
+
+    Completa los campos del formulario: ISBN, Título, Autor, Categoría, Precio y Stock.
+
+    Para asignar la imagen de portada:
+
+        Haz clic en Examinar... junto al campo Imagen.
+
+        Selecciona un archivo de imagen permitido (*.jpg, *.jpeg, *.png, *.gif, *.webp).
+
+        El sistema copiará la imagen a la carpeta local img/ (si es posible) y colocará automáticamente la ruta en el campo de imagen.
+
+    Haz clic en Agregar libro.
+
+    El sistema valida que no haya campos obligatorios vacíos, que el ISBN no esté duplicado y que precio y stock sean valores numéricos no negativos. Luego añade el libro, lo guarda en datos_libros.txt y actualiza la tabla.
+
+6.2 Actualizar stock y eliminar libros
+
+    Actualizar stock: Selecciona un libro en la tabla de AdminView, haz clic en Actualizar stock, ingresa el nuevo valor entero (no negativo) y confirma. El cambio se guarda de inmediato en el inventario y en archivo.
+
+    Eliminar libro: Selecciona un libro en la tabla, haz clic en Eliminar libro y confirma en el cuadro de diálogo. El libro se elimina del inventario y se actualiza el archivo persistente.
+
+6.3 Consultar compradores y ventas por libro
+
+    Selecciona un libro en la tabla de AdminView.
+
+    Haz clic en Ver compradores (o revisa la columna Compradores de la tabla).
+
+    Se mostrará un resumen con:
+
+        Compradores distintos: Cantidad de usuarios únicos que han comprado ese ISBN (calculado sin duplicados).
+
+        Unidades totales vendidas: Suma total de copias vendidas de ese libro.
+
+        Stock actual: Existencias disponibles en ese momento.
+
+6.4 Volver al catálogo o cerrar sesión
+
+    En AdminView, haz clic en Volver para regresar a CatalogoView con la tabla actualizada.
+
+    En CatalogoView, haz clic en Cerrar Sesión para volver a LoginView. Si tenías artículos en el carrito sin pagar, el sistema devuelve esas unidades al stock antes de cerrar la sesión. Al iniciar sesión con otro usuario, los libros publicados y el historial acumulado seguirán disponibles.

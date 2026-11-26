@@ -7,7 +7,7 @@ public class Libro {
     private String categoria;
     private double precio;
     private int stock;
-    private String rutaImagen; // Nuevo atributo para la portada
+    private String rutaImagen;
 
     public Libro(String isbn, String titulo, String autor, String categoria, double precio, int stock, String rutaImagen) {
         this.isbn = isbn;
